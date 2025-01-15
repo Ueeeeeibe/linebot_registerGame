@@ -1,0 +1,103 @@
+@startuml
+class com.example.linebot.replier.Help {
++ reply(): Message
+}
+
+class com.example.linebot.replier.Omikuji {
++ reply(): Message
+}
+
+class com.example.linebot.replier.Greet {
++ reply(): Message
+}
+
+class com.example.linebot.replier.Parrot {
+- text: String
++ Parrot(String)
++ reply(): Message
+}
+
+
+class com.example.linebot.replier.CreateCarouselList {
++ {static} createCarouselList(ArrayList<String>,ArrayList<String>,GameListType,boolean): ArrayList<Message>
+- {static} createSubBubbleList(ArrayList<String>,ArrayList<String>,GameListType): ArrayList<FlexBubble>
+}
+
+class com.example.linebot.replier.CarouselSearchGame {
+- inputText: String
+- imgUrls: ArrayList<String>
+- gameListType: GameListType
++ CarouselSearchGame(String,ArrayList<String>,GameListType)
++ reply(): Message
+}
+class com.example.linebot.WebScraping {
++ {static} getImageUrls(String): ArrayList<String>
+}
+
+interface com.example.linebot.Replier {
+~ reply(): Message
+}
+
+class com.example.linebot.UserData {
+- urls: ArrayList<String>
+- searchingGames: boolean
+- judgeListType: GameListType
++ getUrls(): ArrayList<String>
++ getSearchingGames(): boolean
++ getJudgeListType(): GameListType
++ setUrls(ArrayList<String>): void
++ setSearchingGames(boolean): void
++ setJudgeListType(GameListType): void
+}
+
+
+class com.example.linebot.Register {
++ {static} registerGame(String,String): JsonObject
+}
+
+enum com.example.linebot.GameListType {
++  OKINIIRI
++  YATTEMITAI
++  NONE
++ {static} fromString(String): GameListType
++ {static} toString(GameListType): String
+}
+
+
+class com.example.linebot.LinebotApplication {
++ {static} main(String[]): void
+}
+
+class com.example.linebot.SaveData {
++ {static} saveToJson(String,String,String,String): void
+}
+
+class com.example.linebot.Json {
+- {static} jsonPath: String
++ {static} getImgUrls(GameListType,String): ArrayList<String>
++ {static} getGameNames(GameListType,String): ArrayList<String>
++ {static} deleteGame(GameListType,String,String): void
++ {static} write(JsonObject): void
+- {static} read(): String
+}
+
+class com.example.linebot.Callback {
+- userDataMap: HashMap<String,UserData>
++ handleMessage(MessageEvent): ArrayList<Message>
++ buildConfirm(): TemplateMessage
++ buildConfirmShow(): TemplateMessage
++ buildReply(String,String): ArrayList<Message>
++ buildReplyMessageList(String,String): ArrayList<Message>
++ buildReplyMessage(String,String,UserData): Message
+}
+
+
+
+
+com.example.linebot.Replier <|.. com.example.linebot.replier.Help
+com.example.linebot.Replier <|.. com.example.linebot.replier.CarouselSearchGame
+com.example.linebot.Replier <|.. com.example.linebot.replier.Omikuji
+com.example.linebot.Replier <|.. com.example.linebot.replier.Greet
+com.example.linebot.Replier <|.. com.example.linebot.replier.Parrot
+com.example.linebot.Callback "1" *-- "0..1" com.example.linebot.UserData
+@enduml

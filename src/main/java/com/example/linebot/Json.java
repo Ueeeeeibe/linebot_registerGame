@@ -13,7 +13,23 @@ import java.util.ArrayList;
 
 public class Json {
 
-    private static final String jsonPath = "./src/main/java/com/example/linebot/user_data.json";
+    private static final Path jsonPath = Path.of("./src/main/java/com/example/linebot/user_data.json");
+
+    static {
+        // ファイルが存在しない場合は作成
+        try {
+
+            Files.createFile(jsonPath);
+            // ファイルが存在しない場合は{"userlist":[]}を書き込む
+            try (JsonWriter writer = new JsonWriter(Files.newBufferedWriter(jsonPath))) {
+                writer.beginObject();
+                writer.name("userlist").beginArray().endArray();
+                writer.endObject();
+            }
+        } catch (IOException e) {
+            // ファイルが存在する場合は何もしない
+        }
+    }
 
     public static ArrayList<String> getImgUrls(GameListType gameListType, String userId) {
         JsonObject jsonObject = JsonParser.parseString(read()).getAsJsonObject();
@@ -82,16 +98,16 @@ public class Json {
     }
 
     public static void write(JsonObject jsonObject) {
-        try (JsonWriter writer = new JsonWriter(Files.newBufferedWriter(Path.of(jsonPath)))) {
+        try (JsonWriter writer = new JsonWriter(Files.newBufferedWriter(jsonPath))) {
             new Gson().toJson(jsonObject, writer);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private static String read() {
+    public static String read() {
         try {
-            return Files.readString(Path.of(jsonPath));
+            return Files.readString(jsonPath);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

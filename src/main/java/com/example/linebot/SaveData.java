@@ -1,23 +1,12 @@
 package com.example.linebot;
 
 import com.google.gson.*;
-import com.google.gson.stream.JsonWriter;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 public class SaveData {
 
     public static void saveToJson(String listName, String gameName, String imageUrl, String userId) {
         // ここに保存処理を書く
-        Gson gson = new Gson();
-        String jsonText;
-        try {
-            jsonText = Files.readString(Path.of("./src/main/java/com/example/linebot/user_data.json"));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        String jsonText = Json.read();
 
         JsonObject jsonObject = JsonParser.parseString(jsonText).getAsJsonObject();
         // ユーザーが存在するか確認
